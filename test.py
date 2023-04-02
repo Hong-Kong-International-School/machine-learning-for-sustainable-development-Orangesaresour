@@ -19,18 +19,18 @@ image_size = (224, 224)
 data_generator = ImageDataGenerator(preprocessing_function=preprocess_input)
 
 train_generator = data_generator.flow_from_directory(
-        '/Users/derke/Desktop/DermTest/dermnet/train',
+        '/Users/derke/Documents/GitHub/machine-learning-for-sustainable-development-Orangesaresour/DataCombined/train',
         target_size=image_size,
-        batch_size=80,
+        batch_size=120,
         class_mode='categorical')
 
 validation_generator = data_generator.flow_from_directory(
-        '/Users/derke/Desktop/DermTest/dermnet/test',
+        '/Users/derke/Documents/GitHub/machine-learning-for-sustainable-development-Orangesaresour/DataCombined/test',
         target_size=image_size,
-        batch_size=40,
+        batch_size=50,
         class_mode='categorical')
 
-num_classes = 23
+num_classes = 3
 # resnet_weights_path = '/Users/derke/Desktop/DermTest/resnet101/resnet101_weights_tf_dim_ordering_tf_kernels.h5'
 
 model = Sequential()
@@ -40,14 +40,14 @@ model.add(Dense(num_classes, activation='softmax'))
 model.layers[0].trainable = True
 model.summary()
 model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
-earlystop_callback = EarlyStopping(monitor='val_loss', patience=3)
+earlystop_callback = EarlyStopping(monitor='val_loss', patience=5)
 
 model.fit(
         train_generator,
         steps_per_epoch=7,
-        epochs=80,
+        epochs=100,
         validation_data=validation_generator,
         callbacks=[earlystop_callback]
         )
 
-model.save('modelv1-40epoch-7spe-softmax-imgnet-trainableTrue-topless-avgpooling.h5')
+model.save('combinedData-modelv1-100epoch-7spe-softmax-imgnet-trainableTrue-topless-avgpooling.h5')
