@@ -33,6 +33,13 @@ validation_generator = data_generator.flow_from_directory(
 num_classes = 3
 # resnet_weights_path = '/Users/derke/Desktop/DermTest/resnet101/resnet101_weights_tf_dim_ordering_tf_kernels.h5'
 
+checkpoint_path = "checkpoints_temp/cp-{epoch:04d}.ckpt"
+checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
+    filepath=checkpoint_path,
+    save_weights_only=True,
+    verbose=1,
+    period=5)  
+
 model = Sequential()
 model.add(ResNet50(include_top=False, pooling='avg', weights='imagenet')) #try f
 model.add(Dense(num_classes, activation='softmax'))
@@ -40,14 +47,14 @@ model.add(Dense(num_classes, activation='softmax'))
 model.layers[0].trainable = True
 model.summary()
 model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
-earlystop_callback = EarlyStopping(monitor='val_loss', patience=5)
+earlystop_callback = EarlyStopping(monitor='val_loss', verbose = 1, patience=5)
 
 model.fit(
         train_generator,
         steps_per_epoch=7,
         epochs=100,
         validation_data=validation_generator,
-        callbacks=[earlystop_callback]
+        callbacks=[checkpoint_callback, earlystop_callback]
         )
 
 model.save('combinedData-modelv1-100epoch-7spe-softmax-imgnet-trainableTrue-topless-avgpooling.h5')
