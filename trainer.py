@@ -30,7 +30,7 @@ validation_generator = data_generator.flow_from_directory(
         batch_size=50,
         class_mode='categorical')
 
-num_classes = 3
+num_classes = 5
 # resnet_weights_path = '/Users/derke/Desktop/DermTest/resnet101/resnet101_weights_tf_dim_ordering_tf_kernels.h5'
 
 checkpoint_path = "checkpoints_temp/cp-{epoch:04d}.ckpt"
@@ -52,9 +52,9 @@ earlystop_callback = EarlyStopping(monitor='val_loss', verbose = 1, patience=5)
 model.fit(
         train_generator,
         steps_per_epoch=7,
-        epochs=100,
+        epochs=60,
         validation_data=validation_generator,
         callbacks=[checkpoint_callback, earlystop_callback]
         )
 
-model.save('combinedData-modelv1-100epoch-7spe-softmax-imgnet-trainableTrue-topless-avgpooling.h5')
+model.save('combinedData(5)-modelv2-60epoch-7spe-softmax-imgnet-trainableTrue-topless-avgpooling.h5')
