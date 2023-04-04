@@ -36,7 +36,7 @@ num_classes = 5
 checkpoint_path = "checkpoints_temp/cp-{epoch:04d}.ckpt"
 checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     filepath=checkpoint_path,
-    save_weights_only=True,
+    save_best_only=True,
     verbose=1,
     period=5)  
 
