@@ -9,6 +9,8 @@ from tensorflow.keras.applications.resnet import preprocess_input
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import EarlyStopping
+from keras import optimizers
+
 
 seed = 0
 random.seed(seed)
@@ -46,7 +48,7 @@ model.add(Dense(num_classes, activation='softmax'))
 
 model.layers[0].trainable = True
 model.summary()
-model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=optimizers.SGD(lr=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
 earlystop_callback = EarlyStopping(monitor='val_loss', verbose = 1, patience=10)
 
 model.fit(
@@ -58,4 +60,4 @@ model.fit(
         callbacks=[earlystop_callback]
         )
 
-model.save('combinedData(5)-modelv5-12epoch-1010steps-softmax-imgnet-trainableTrue-topless-avgpooling.h5')
+model.save('combinedData(5)-modelv6-0.001lr-100epoch-1010steps-ADAM-softmax-imgnet-trainableTrue-topless-avgpooling.h5')
