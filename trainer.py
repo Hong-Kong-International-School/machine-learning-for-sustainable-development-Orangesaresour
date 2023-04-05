@@ -21,13 +21,13 @@ data_generator = ImageDataGenerator(preprocessing_function=preprocess_input)
 train_generator = data_generator.flow_from_directory(
         '/Users/derke/Documents/GitHub/machine-learning-for-sustainable-development-Orangesaresour/DataCombined/train',
         target_size=image_size,
-        batch_size=120,
+        batch_size=80,
         class_mode='categorical')
 
 validation_generator = data_generator.flow_from_directory(
         '/Users/derke/Documents/GitHub/machine-learning-for-sustainable-development-Orangesaresour/DataCombined/test',
         target_size=image_size,
-        batch_size=50,
+        batch_size=40,
         class_mode='categorical')
 
 num_classes = 5
@@ -47,14 +47,15 @@ model.add(Dense(num_classes, activation='softmax'))
 model.layers[0].trainable = True
 model.summary()
 model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
-earlystop_callback = EarlyStopping(monitor='val_loss', verbose = 1, patience=5)
+earlystop_callback = EarlyStopping(monitor='val_loss', verbose = 1, patience=10)
 
 model.fit(
         train_generator,
-        steps_per_epoch=7,
-        epochs=60,
+        steps_per_epoch=10,
+        validation_steps=10,
+        epochs=100,
         validation_data=validation_generator,
-        callbacks=[checkpoint_callback, earlystop_callback]
+        callbacks=[earlystop_callback]
         )
 
-model.save('combinedData(5)-modelv2-60epoch-7spe-softmax-imgnet-trainableTrue-topless-avgpooling.h5')
+model.save('combinedData(5)-modelv5-12epoch-1010steps-softmax-imgnet-trainableTrue-topless-avgpooling.h5')

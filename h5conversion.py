@@ -1,11 +1,8 @@
 import tensorflow as tf
-import tfcoreml
-import coremltools
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.applications import ResNet50
 
-print ("dog")
 # num_classes = 5
 # graph = tf.Graph()
 # model = Sequential()
