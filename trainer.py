@@ -11,6 +11,11 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import EarlyStopping
 from keras import optimizers
 
+class_labels = {'folder_1': 0,
+                'folder_2': 1,
+                'folder_3': 2,
+                'folder_4': 3,
+                'folder_5': 4}
 
 seed = 0
 random.seed(seed)
@@ -24,13 +29,15 @@ train_generator = data_generator.flow_from_directory(
         '/Users/derke/Documents/GitHub/machine-learning-for-sustainable-development-Orangesaresour/DataCombined/train',
         target_size=image_size,
         batch_size=80,
-        class_mode='categorical')
+        class_mode='categorical',
+        classes=list(class_labels.keys()))
 
 validation_generator = data_generator.flow_from_directory(
         '/Users/derke/Documents/GitHub/machine-learning-for-sustainable-development-Orangesaresour/DataCombined/test',
         target_size=image_size,
         batch_size=40,
-        class_mode='categorical')
+        class_mode='categorical',
+        classes=list(class_labels.keys()))
 
 num_classes = 5
 # resnet_weights_path = '/Users/derke/Desktop/DermTest/resnet101/resnet101_weights_tf_dim_ordering_tf_kernels.h5'
@@ -48,7 +55,7 @@ model.add(Dense(num_classes, activation='softmax'))
 
 model.layers[0].trainable = True
 model.summary()
-model.compile(optimizer=optimizers.SGD(lr=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
 earlystop_callback = EarlyStopping(monitor='val_loss', verbose = 1, patience=10)
 
 model.fit(
