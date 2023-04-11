@@ -5,23 +5,29 @@ from PIL import Image
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.applications import ResNet50
-from tensorflow.keras.applications.resnet import preprocess_input
+# from tensorflow.keras.applications.resnet import preprocess_input
+from tensorflow.keras.applications.mobilenet import preprocess_input
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import SGD
+from tensorflow.keras.applications import MobileNetV3Small
 from keras import optimizers
 
-class_labels = {'folder_1': 0,
-                'folder_2': 1,
-                'folder_3': 2,
-                'folder_4': 3,
-                'folder_5': 4}
+class_labels = {
+    "Eczema": 0,
+    "Melanoma": 1,
+    "Psoriasis": 2,
+    "Warts": 3
+}
 
 seed = 0
 random.seed(seed)
 np.random.seed(seed)
 tf.random.set_seed(seed)
 image_size = (224, 224)
+size = 224
 
 data_generator = ImageDataGenerator(preprocessing_function=preprocess_input)
 
@@ -39,7 +45,7 @@ validation_generator = data_generator.flow_from_directory(
         class_mode='categorical',
         classes=list(class_labels.keys()))
 
-num_classes = 5
+num_classes = 4
 # resnet_weights_path = '/Users/derke/Desktop/DermTest/resnet101/resnet101_weights_tf_dim_ordering_tf_kernels.h5'
 
 checkpoint_path = "checkpoints_temp/cp-{epoch:04d}.ckpt"
@@ -50,21 +56,21 @@ checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     period=5)  
 
 model = Sequential()
-model.add(ResNet50(include_top=False, pooling='avg', weights='imagenet')) #try f
+model.add(MobileNetV3Small(input_shape=(size, size, 3), alpha=1.0, include_top=False, weights='imagenet', input_tensor=None, pooling='avg', classes=4))
 model.add(Dense(num_classes, activation='softmax'))
 
 model.layers[0].trainable = True
 model.summary()
-model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
+optimizer = SGD(learning_rate=0.001)
+model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
 earlystop_callback = EarlyStopping(monitor='val_loss', verbose = 1, patience=10)
 
 model.fit(
         train_generator,
-        steps_per_epoch=10,
-        validation_steps=10,
+        steps_per_epoch=40,
         epochs=100,
         validation_data=validation_generator,
         callbacks=[earlystop_callback]
         )
 
-model.save('combinedData(5)-modelv6-0.001lr-100epoch-1010steps-ADAM-softmax-imgnet-trainableTrue-topless-avgpooling.h5')
+model.save('combinedData(4)-modelv7-mobilenetsmall-sgd-100epoch-1010steps-softmax-imgnet-trainableTrue-topless-avgpooling.h5')
