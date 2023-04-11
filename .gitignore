@@ -3,3 +3,5 @@ resnet101
 resnet101_weights_tf_dim_ordering_tf_kernels.h5
 checkpoints_temp
 Eczema_Photos
+dataverse_files
+ham_polished
