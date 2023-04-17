@@ -1,21 +1,21 @@
 import tensorflow as tf
 import numpy as np
 from PIL import Image
-from tensorflow.keras.applications.resnet import preprocess_input
+# from tensorflow.keras.applications.resnet50 import preprocess_input
 # Load the saved model
-model = tf.keras.models.load_model('combinedData(4)-modelv8-100epoch-softmax-imgnet-trainableTrue-topless-avgpooling.h5')
+model = tf.keras.models.load_model('previous_models/HAM10000(4)-modelv9-100epoch-softmax-imgnet-trainableTrue-topless-avgpooling.h5')
 class_labels = {
-    0 : "Eczema",
-    1 : "Melanoma",
-    2 : "Psoriasis",
-    3 : "Warts"
+    0: "bcc",
+    1: "bkl",
+    2: "mel",
+    3: "nv"
 }
 # Load the test image
 # test_image = Image.open('DataCombined/test/Melanoma/atypical-nevi-dermoscopy-100.jpg')
-test_image = Image.open('download.jpg')
+test_image = Image.open('dataverse_files/ham_organized/bcc/ISIC_0025260.jpg')
 test_array = np.array(test_image)
 # Preprocess the test image
-preprocessed_test_image = preprocess_input(test_array)
+preprocessed_test_image = tf.keras.applications.resnet50.preprocess_input(test_array)
 
 # Generate predictions for the test image
 predictions = model.predict(np.array([preprocessed_test_image]))
