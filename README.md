@@ -8,3 +8,6 @@ DermDetect scans an image taken within the app for a classification of the blemi
 The installable application DermDetect should be found on the appstore, installed for free. Usage will require a functioning camera. Simply take a close up picture of the blemish in question and allow the program to determine the rest. 
 
 ## Model Details
+The model powering every classification within DermDetect is a transfer-learning system utilizing ResNet-50. The model features approximately 23 million parameters.
+
+Several different datasets were explored, but the one yielding best results is an equisize-processed HAM10000 (Humans against machines 10000) dataset. This dataset has seen extensive exploration and is curated by first author Noel Codella. You may read more [here](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DBW86T).
