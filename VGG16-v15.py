@@ -10,6 +10,9 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import EarlyStopping
 from keras.optimizers import SGD
+
+from keras.models import Model
+from keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense
 from keras.callbacks import LearningRateScheduler
 
 seed = 0
@@ -22,6 +25,7 @@ class_labels = {
     "mel": 1,
     "nv": 2
 }
+num_classes = len(class_labels)
 
 datagen_withaug = ImageDataGenerator(
     rotation_range=10,
@@ -50,7 +54,7 @@ validation_generator = datagen_withoutaug.flow_from_directory(
         class_mode='categorical',
         classes=list(class_labels.keys()))
 
-num_classes = 3
+
 # resnet_weights_path = '/Users/derke/Desktop/DermTest/resnet101/resnet101_weights_tf_dim_ordering_tf_kernels.h5'
 checkpoint_path = "checkpoints_temp/cp-{epoch:04d}.ckpt"
 checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
@@ -59,16 +63,60 @@ checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     verbose=1,
     period=5)  
 
-model = Sequential()
-model.add(ResNet50(include_top=False, pooling='avg', weights='imagenet')) #try f
-model.add(Dense(num_classes, activation='softmax'))
 
-model.layers[0].trainable = True
-model.summary()
-model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
+
+
+def vgg16():
+    # Define the input shape
+    input_shape = (224, 224, 3)
+    input_tensor = Input(shape=input_shape)
+
+    # Block 1
+    x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv1')(input_tensor)
+    x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv2')(x)
+    x = MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool')(x)
+
+    # Block 2
+    x = Conv2D(128, (3, 3), activation='relu', padding='same', name='block2_conv1')(x)
+    x = Conv2D(128, (3, 3), activation='relu', padding='same', name='block2_conv2')(x)
+    x = MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool')(x)
+
+    # Block 3
+    x = Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv1')(x)
+    x = Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv2')(x)
+    x = Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv3')(x)
+    x = MaxPooling2D((2, 2), strides=(2, 2), name='block3_pool')(x)
+
+    # Block 4
+    x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block4_conv1')(x)
+    x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block4_conv2')(x)
+    x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block4_conv3')(x)
+    x = MaxPooling2D((2, 2), strides=(2, 2), name='block4_pool')(x)
+
+    # Block 5
+    x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv1')(x)
+    x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv2')(x)
+    x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv3')(x)
+    x = MaxPooling2D((2, 2), strides=(2, 2), name='block5_pool')(x)
+
+    # Classification block
+    x = Flatten(name='flatten')(x)
+    x = Dense(4096, activation='relu', name='fc1')(x)
+    x = Dense(4096, activation='relu', name='fc2')(x)
+    x = Dense(num_classes, activation='softmax', name='predictions')(x)
+
+    # Create the model
+    model = Model(inputs=input_tensor, outputs=x, name='vgg16')
+    return model
+
+
+
+model = vgg16(num_classes)
 earlystop_callback = EarlyStopping(monitor='val_loss', verbose = 2, patience=10)
 
 
+model.summary()
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit(
         train_generator,
         epochs=100,
@@ -76,4 +124,4 @@ model.fit(
         callbacks=[earlystop_callback]
         )
 
-model.save('HAM10000(3)-modelv14-100epoch-softmax-imgnet-trainableTrue-topless-avgpooling.h5')
+model.save('HAM10000(3)-vgg16-v1.h5')
