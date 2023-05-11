@@ -66,7 +66,7 @@ checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
 
 
 
-def vgg16():
+def vgg16(num_classes):
     # Define the input shape
     input_shape = (224, 224, 3)
     input_tensor = Input(shape=input_shape)
