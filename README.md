@@ -17,4 +17,5 @@ During training, HAM10000(3)-modelv14 demonstrated to perform not necessarily ex
 ### Demo Video
 [![Demonstration DermDetect](https://img.youtube.com/vi/cDYIFwmEafs&ab/maxresdefault.jpg)](https://www.youtube.com/watch?v=cDYIFwmEafs&ab)
 {% include youtube.html id="cDYIFwmEafs&ab" %}
+<iframe width="560" height="315" src="https://www.youtube.com/embed/cDYIFwmEafs" frameborder="0" allowfullscreen></iframe>
 ## Development Overview
