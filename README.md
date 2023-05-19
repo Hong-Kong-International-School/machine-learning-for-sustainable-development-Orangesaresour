@@ -15,6 +15,11 @@ Several different datasets were explored, but the one yielding best results is a
 During training, HAM10000(3)-modelv14 demonstrated to perform not necessarily exceptionally well at approximately 84% validation accuracy and above 95% training accuracy. In my opinion the issue of validation accuracy being less than 90% lies in model architectural limitations, as the loss function (incorporated an early_stop callback function) reported very low scores and less overfitting. 
 
 ### Demo Video
+<<<<<<< HEAD
+[![Demonstration DermDetect](https://img.youtube.com/vi/cDYIFwmEafs&ab/maxresdefault.jpg)](https://www.youtube.com/watch?v=cDYIFwmEafs&ab)
+{% include youtube.html id="cDYIFwmEafs&ab" %}
+=======
 [![Demonstration DermDetect](https://img.youtube.com/vi/cDYIFwmEafs&ab/0.jpg)](https://www.youtube.com/watch?v=cDYIFwmEafs&ab)
 
+>>>>>>> parent of a3647f3 (VGG again)
 ## Development Overview

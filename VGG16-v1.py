@@ -104,7 +104,7 @@ def vgg16(num_classes):
     x = Dense(4096, activation='relu', name='fc1')(x)
     x = Dense(4096, activation='relu', name='fc2')(x)
     x = Dense(num_classes, activation='softmax', name='predictions')(x)
-#dog
+
     # Create the model
     model = Model(inputs=input_tensor, outputs=x, name='vgg16')
     return model
