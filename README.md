@@ -18,3 +18,18 @@ During training, HAM10000(3)-modelv14 demonstrated to perform not necessarily ex
 [![Demonstration DermDetect](https://i.imgur.com/a/Lo9zWGy)](https://www.youtube.com/watch?v=cDYIFwmEafs&ab)
 
 ## Development Overview
+
+### Design Process
+There were several key elements within the design of the transfer learning system, prior to the VGG-16 implementation currently underway. An important consideration is data size consistency and processability of data and data volume imbalance calibration.
+
+This model underwent several evolutions of training. First I had explored a different dataset from the HAM10000 from Kaggle. Several datasets passed I had refined and began to utilize different methodologies for our training. I started implementing different variations of earlystop callbacks and checkpoints in order to manage the model's training since it often took hours or even full days.
+
+Future work will include deviating from the current model ResNet and attempting to utilize self-made architecture. Possibly taking the VGG-16 base model and translating it larger or experimenting with it. ResNet's architecture cannot be augmented once implemented so it is unappealing.
+
+## Sources
+https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DBW86T
+https://huggingface.co/docs/transformers/model_doc/resnet
+https://www.mathworks.com/help/deeplearning/ref/vgg16.html
+https://www.kaggle.com/code/fanconic/cnn-for-skin-cancer-detection/notebook
+https://www.youtube.com/watch?v=qB6h5CohLbs&ab_channel=DigitalSreeni
+### ChatGPT
